@@ -1,0 +1,46 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Ver Productos{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <!-- Título y botón para crear nuevo producto -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Productos Registrados</h2>
+        <a href="{{ url_for('crear_producto') }}" class="btn btn-success btn-sm">
+            <i class="bx bx-plus"></i> Crear Producto
+        </a>
+    </div>
+
+    <!-- Tabla de Productos -->
+    <table class="table table-striped table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombre del Producto</th>
+                <th>Descripción</th>
+                <th>Categoría</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+            <tr>
+                <td>{{ producto.id }}</td>
+                <td>{{ producto.nombre_producto }}</td>
+                <td>{{ producto.descripcion_producto }}</td>
+                <td>{{ producto.categoria.nombre_categoria }}</td>
+                <td>
+                    <a href="{{ url_for('editar_producto', id=producto.id) }}" class="btn btn-primary btn-sm">
+                        <i class="bx bx-edit"></i> Editar
+                    </a>
+                    <a href="{{ url_for('eliminar_producto', id=producto.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este producto?')">
+                        <i class="bx bx-trash"></i> Eliminar
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

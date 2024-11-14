@@ -1,0 +1,65 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Crear Producto{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <h2 class="form-title">Crear Nuevo Producto</h2>
+    
+    <form action="{{ url_for('crear_producto') }}" method="POST" class="form-create-user"> <!-- Usar la misma clase para el diseño -->
+        
+        <div class="form-group">
+            <label for="nombre_producto">Nombre del Producto</label>
+            <input 
+                type="text" 
+                id="nombre_producto" 
+                name="nombre_producto" 
+                placeholder="Ingrese nombre del producto" 
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="descripcion_producto">Descripción</label>
+            <textarea 
+                id="descripcion_producto" 
+                name="descripcion_producto" 
+                placeholder="Ingrese descripción del producto" 
+                required
+                style="
+                    width: 100%;
+                    padding: 10px;
+                    font-size: 14px;
+                    border: 1px solid #ddd;
+                    border-radius: 5px;
+                    background-color: #f9f9f9;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    resize: none;
+                    height: 120px;
+                    transition: border-color 0.3s ease;
+                "
+            ></textarea>
+        </div>
+        
+        
+
+        <div class="form-group">
+            <label for="categoria_id">Categoría</label>
+            <select id="categoria_id" name="categoria_id" required>
+                <option value="" disabled selected>Seleccione una categoría</option>
+                {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}">{{ categoria.nombre_categoria }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn-submit">Crear Producto</button>
+    </form>
+
+    <div class="d-flex justify-content-center mt-3">
+        <!-- Botón para regresar a la lista de productos -->
+        <a href="{{ url_for('ver_productos') }}" class="btn btn-secondary btn-sm">
+            <i class="bx bx-arrow-back"></i> Ir a la lista de productos
+        </a>
+    </div>
+</div>
+{% endblock %}

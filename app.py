@@ -265,5 +265,96 @@ def crear_categoria():
     return render_template('admin/crear_categoria.html')
 
 
+#---------------CREAR PRODUCTOS MODULO----------
+
+# Definición del modelo Producto
+class Producto(db.Model):
+    __tablename__ = 'productos'
+    id = db.Column(db.Integer, primary_key=True)
+    nombre_producto = db.Column(db.String(100), nullable=False)
+    descripcion_producto = db.Column(db.Text, nullable=False)
+    categoria_id = db.Column(db.Integer, db.ForeignKey('categorias.id'), nullable=False)
+    categoria = db.relationship('Categoria', backref=db.backref('productos', lazy=True))
+
+# Ruta para crear productos
+@app.route('/admin/crear_producto', methods=['GET', 'POST'])
+def crear_producto():
+    if 'loggedin' not in session or session['role'] != 'administrador':
+        return redirect(url_for('login'))
+    
+    # Consultar las categorías existentes para el selector
+    categorias = Categoria.query.all()
+
+    if request.method == 'POST':
+        nombre_producto = request.form['nombre_producto']
+        descripcion_producto = request.form['descripcion_producto']
+        categoria_id = request.form['categoria_id']
+
+        # Crear y guardar el nuevo producto
+        nuevo_producto = Producto(
+            nombre_producto=nombre_producto,
+            descripcion_producto=descripcion_producto,
+            categoria_id=categoria_id
+        )
+        db.session.add(nuevo_producto)
+        db.session.commit()
+        
+        flash('Producto creado exitosamente')
+        return redirect(url_for('ver_productos'))
+
+    return render_template('admin/crear_producto.html', categorias=categorias)
+
+# Ruta para ver productos
+@app.route('/admin/ver_productos')
+def ver_productos():
+    if 'loggedin' not in session or session['role'] != 'administrador':
+        return redirect(url_for('login'))
+    
+    productos = Producto.query.all()
+    return render_template('admin/ver_productos.html', productos=productos)
+
+
+# Ruta para editar un producto
+@app.route('/admin/editar_producto/<int:id>', methods=['GET', 'POST'])
+def editar_producto(id):
+    if 'loggedin' not in session or session['role'] != 'administrador':
+        return redirect(url_for('login'))
+    
+    # Obtener el producto por ID
+    producto = Producto.query.get_or_404(id)
+    categorias = Categoria.query.all()  # Obtener todas las categorías para el select
+    
+    if request.method == 'POST':
+        producto.nombre_producto = request.form['nombre_producto']
+        producto.descripcion_producto = request.form['descripcion_producto']
+        producto.categoria_id = request.form['categoria_id']
+        
+        db.session.commit()
+        flash('Producto actualizado exitosamente')
+        return redirect(url_for('ver_productos'))
+    
+    return render_template('admin/editar_producto.html', producto=producto, categorias=categorias)
+
+
+# Ruta para eliminar un producto
+@app.route('/admin/eliminar_producto/<int:id>', methods=['GET'])
+def eliminar_producto(id):
+    if 'loggedin' not in session or session['role'] != 'administrador':
+        return redirect(url_for('login'))
+    
+    # Obtener el producto por ID y eliminarlo
+    producto = Producto.query.get_or_404(id)
+    db.session.delete(producto)
+    db.session.commit()
+    
+    flash('Producto eliminado exitosamente')
+    return redirect(url_for('ver_productos'))
+
+
+
+
+
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

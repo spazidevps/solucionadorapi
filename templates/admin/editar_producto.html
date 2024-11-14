@@ -1,0 +1,49 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Editar Producto{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <h2 class="form-title">Actualizar Datos del Producto</h2>
+    
+    <form action="{{ url_for('editar_producto', id=producto.id) }}" method="POST" class="form-create-category">
+        
+        <div class="form-group">
+            <label for="nombre_producto">Nombre del Producto</label>
+            <input 
+                type="text" 
+                id="nombre_producto" 
+                name="nombre_producto" 
+                placeholder="Ingrese nombre del producto" 
+                value="{{ producto.nombre_producto }}" 
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="descripcion_producto">Descripción</label>
+            <textarea 
+                id="descripcion_producto" 
+                name="descripcion_producto" 
+                placeholder="Ingrese descripción del producto" 
+                required>{{ producto.descripcion_producto }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="categoria_id">Categoría</label>
+            <select id="categoria_id" name="categoria_id" required>
+                {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}" {% if producto.categoria_id == categoria.id %}selected{% endif %}>{{ categoria.nombre_categoria }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn-submit">Actualizar Producto</button>
+    </form>
+
+    <div class="d-flex justify-content-center mt-3">
+        <a href="{{ url_for('ver_productos') }}" class="btn btn-secondary btn-sm">
+            <i class="bx bx-arrow-back"></i> Ir a la lista de productos
+        </a>
+    </div>
+</div>
+{% endblock %}
