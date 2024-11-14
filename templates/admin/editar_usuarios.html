@@ -1,0 +1,43 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Editar Usuario{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <h2 class="form-title">Actualizar Datos del Usuario</h2>
+    
+    <form action="{{ url_for('editar_usuario', id=usuario.id) }}" method="POST" class="form-create-user">
+        
+        <div class="form-group">
+            <label for="nombre">Nombre Completo</label>
+            <input type="text" id="nombre" name="nombre" value="{{ usuario.nombre }}" placeholder="Ingrese nombre completo" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="nombre_usuario">Nombre de Usuario</label>
+            <input type="text" id="nombre_usuario" name="nombre_usuario" value="{{ usuario.nombre_usuario }}" placeholder="Ingrese nombre de usuario" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="contraseña">Contraseña (dejar en blanco para no cambiarla)</label>
+            <input type="password" id="contraseña" name="contraseña" placeholder="Ingrese nueva contraseña">
+        </div>
+        
+        <div class="form-group">
+            <label for="rol_id">Rol</label>
+            <select id="rol_id" name="rol_id">
+                <option value="1" {% if usuario.rol_id == 1 %}selected{% endif %}>Administrador</option>
+                <option value="2" {% if usuario.rol_id == 2 %}selected{% endif %}>Usuario</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn-submit">Actualizar Usuario</button>
+    </form>
+
+    <div class="d-flex justify-content-center mt-3">
+        <a href="{{ url_for('ver_usuarios') }}" class="btn btn-secondary btn-sm">
+            <i class="bx bx-arrow-back"></i> Ir a la lista de usuarios
+        </a>
+    </div>
+</div>
+{% endblock %}

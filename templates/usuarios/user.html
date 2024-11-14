@@ -1,0 +1,13 @@
+{% extends "usuarios/base_user.html" %}
+
+{% block title %}Panel de Usuario{% endblock %}
+
+{% block content %}
+<div class="user-container">
+    <h2>¡Bienvenido, Usuario!</h2>
+    <p>Disfruta de tu experiencia en el panel de usuario.</p>
+    <form action="{{ url_for('logout') }}" method="POST">
+        <button type="submit">Cerrar Sesión</button>
+    </form>
+</div>
+{% endblock %}

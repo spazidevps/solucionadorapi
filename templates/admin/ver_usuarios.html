@@ -1,0 +1,60 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Ver Usuarios{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <!-- Fila para el título a la izquierda y los botones a la derecha -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- Título de Usuarios Registrados, alineado a la izquierda -->
+        <h2 class="mb-0">Usuarios Registrados</h2>
+
+        <!-- Fila para el botón de Crear Usuario y el buscador, alineados a la derecha -->
+        <div class="d-flex">
+            <!-- Botón Crear Usuario -->
+            <a href="{{ url_for('crear_usuario') }}" class="btn btn-success btn-sm me-2">
+                <i class="bx bx-user-plus"></i> Crear Usuario
+            </a>
+
+            <!-- Buscador -->
+            <form action="{{ url_for('ver_usuarios') }}" method="get" class="d-flex">
+                <input type="text" name="q" class="form-control form-control-sm" placeholder="Buscar usuario" style="max-width: 250px;" value="{{ request.args.get('q', '') }}">
+                <button type="submit" class="btn btn-primary btn-sm ms-2">
+                    <i class="bx bx-search"></i> Buscar
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabla de Usuarios -->
+    <table class="table table-striped table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombre Usuario</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody> 
+            {% for usuario in usuarios %}
+            <tr>
+                <td>{{ usuario.id }}</td>
+                <td>{{ usuario.nombre_usuario }}</td>
+                <td>{{ 'Administrador' if usuario.rol_id == 1 else 'Usuario' }}</td>
+                <td>
+                    <a href="{{ url_for('editar_usuario', id=usuario.id) }}" class="btn btn-primary btn-sm">
+                        <i class="bx bx-edit"></i> Editar
+                    </a>
+                    
+                    <a href="{{ url_for('eliminar_usuario', id=usuario.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?')">
+                        <i class="bx bx-trash"></i> Eliminar
+                    </a>
+                    
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

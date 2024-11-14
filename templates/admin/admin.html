@@ -1,0 +1,159 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Panel de Administrador{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <!-- Texto de bienvenida centrado con estilo atractivo -->
+    <div class="welcome-text">
+        <h2>¡Bienvenido, Administrador!</h2>
+        <p>Estamos encantados de tenerte de vuelta, ¡aquí podrás gestionar todas las operaciones de tu plataforma!</p>
+    </div>
+
+    <!-- Sección de estadísticas rápidas -->
+    <div class="stats">
+        <!-- Estadística de Usuarios Activos -->
+        <div class="stat-item">
+            <h3>Usuarios Registrados en 2024.</h3>
+            <p>96</p>
+            <!-- Gráfico de Barras para Usuarios Activos -->
+            <canvas id="usuariosActivosChart" width="400" height="200"></canvas>
+        </div>
+
+        <!-- Estadística de Ventas de Hoy -->
+        <div class="stat-item">
+            <h3>Usuarios activos IRT.</h3>
+            <p>5</p>
+            <!-- Gráfico de Líneas para Ventas de Hoy -->
+            <canvas id="ventasHoyChart" width="400" height="200"></canvas>
+        </div>
+
+        <!-- Estadística de Pedidos Pendientes -->
+        <div class="stat-item">
+            <h3>Motores mas solicitados.</h3>
+            <p>8</p>
+            <!-- Gráfico de Pastel para Pedidos Pendientes -->
+            <canvas id="pedidosPendientesChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Asegúrate de que Chart.js se carga primero -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Gráfico de Usuarios Activos (Gráfico de Barras)
+    var ctx1 = document.getElementById('usuariosActivosChart').getContext('2d');
+    var usuariosActivosChart = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'],
+            datasets: [{
+                label: 'Usuarios Activos',
+                data: [65, 59, 80, 81, 56, 55],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Gráfico de Ventas de Hoy (Gráfico de Líneas)
+    var ctx2 = document.getElementById('ventasHoyChart').getContext('2d');
+    var ventasHoyChart = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: ['10:00 AM', '12:00 PM', '2:00 PM', '4:00 PM', '6:00 PM'],
+            datasets: [{
+                label: 'Usuarios IRT',
+                data: [120, 150, 170, 160, 180],
+                fill: false,
+                borderColor: 'rgba(255, 99, 132, 1)',
+                tension: 0.1
+            }]
+        }
+    });
+
+    // Gráfico de Pedidos Pendientes (Gráfico de Pastel)
+    var ctx3 = document.getElementById('pedidosPendientesChart').getContext('2d');
+    var pedidosPendientesChart = new Chart(ctx3, {
+        type: 'pie',
+        data: {
+            labels: ['Axial', 'Cadena'],
+            datasets: [{
+                label: 'Pedidos Pendientes',
+                data: [8, 15],
+                backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'],
+                borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+                borderWidth: 1
+            }]
+        }
+    });
+</script>
+
+<style>
+   /* Estilos generales */
+.admin-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+.welcome-text {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Contenedor de estadísticas */
+.stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* Estilos de cada tarjeta de estadísticas */
+.stat-item {
+    flex: 1 1 300px; /* mínimo de 300px de ancho y se ajustará */
+    max-width: 400px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Estilos específicos para los títulos en .stat-item */
+.stat-item h3 {
+    font-size: 1.2em;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+/* Estilos para gráficos dentro de .stat-item */
+.stat-item canvas {
+    max-width: 100%; /* Los gráficos ocuparán el 100% del contenedor */
+    height: 180px; /* Fija una altura para evitar que se estiren en pantallas pequeñas */
+}
+
+/* Media query para pantallas pequeñas */
+@media (max-width: 768px) {
+    .stats {
+        flex-direction: column;
+        align-items: center;
+    }
+    .stat-item {
+        width: 90%; /* Ocupa el 90% del ancho en pantallas pequeñas */
+    }
+}
+
+    </style>
+    
+
+{% endblock %}
