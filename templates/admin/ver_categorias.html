@@ -1,0 +1,52 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Ver Categorías{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <!-- Fila para el título a la izquierda y el botón a la derecha -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- Título de Categorías Registradas, alineado a la izquierda -->
+        <h2 class="mb-0">Categorías Registradas</h2>
+
+        <!-- Fila para el botón de Crear Categoría, alineado a la derecha -->
+        <div class="d-flex">
+            <!-- Botón Crear Categoría -->
+            <a href="{{ url_for('crear_categoria') }}" class="btn btn-success btn-sm me-2">
+                <i class="bx bx-category-alt"></i> Crear Categoría
+            </a>
+        </div>
+    </div>
+
+    <!-- Tabla de Categorías -->
+    <table class="table table-striped table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombre de la Categoría</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for categoria in categorias %}
+            <tr>
+                <td>{{ categoria.id }}</td>
+                <td>{{ categoria.nombre_categoria }}</td>
+                <td>{{ categoria.descripcion_categoria }}</td>
+                <td>
+                    <a href="{{ url_for('editar_categoria', id=categoria.id) }}" class="btn btn-primary btn-sm">
+                        <i class="bx bx-edit"></i> Editar
+                    </a>
+                    
+                    <a href="{{ url_for('eliminar_categoria', id=categoria.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar esta categoría?')">
+                        <i class="bx bx-trash"></i> Eliminar
+                    </a>
+                    
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

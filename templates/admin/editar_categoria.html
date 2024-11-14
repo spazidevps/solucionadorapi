@@ -1,0 +1,30 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Editar Categoría{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <h2 class="form-title">Actualizar Datos de la Categoría</h2>
+    
+    <form action="{{ url_for('editar_categoria', id=categoria.id) }}" method="POST" class="form-create-category">
+        
+        <div class="form-group">
+            <label for="nombre_categoria">Nombre de la Categoría</label>
+            <input type="text" id="nombre_categoria" name="nombre_categoria" value="{{ categoria.nombre_categoria }}" placeholder="Ingrese nombre de la categoría" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="descripcion_categoria">Descripción</label>
+            <textarea id="descripcion_categoria" name="descripcion_categoria" placeholder="Ingrese descripción de la categoría" required>{{ categoria.descripcion_categoria }}</textarea>
+        </div>
+        
+        <button type="submit" class="btn-submit">Actualizar Categoría</button>
+    </form>
+
+    <div class="d-flex justify-content-center mt-3">
+        <a href="{{ url_for('ver_categorias') }}" class="btn btn-secondary btn-sm">
+            <i class="bx bx-arrow-back"></i> Ir a la lista de categorías
+        </a>
+    </div>
+</div>
+{% endblock %}

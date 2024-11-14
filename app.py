@@ -19,6 +19,15 @@ class Usuario(db.Model):
     rol_id = db.Column(db.Integer, nullable=False)
     nombre = db.Column(db.String(100), nullable=False)  # Nuevo campo para el nombre completo
 
+# Definición del modelo Categoria
+class Categoria(db.Model):
+    __tablename__ = 'categorias'  # Nombre de la tabla en la base de datos
+    id = db.Column(db.Integer, primary_key=True)
+    nombre_categoria = db.Column(db.String(100), nullable=False)
+    descripcion_categoria = db.Column(db.Text, nullable=False)
+
+
+
 # Clave secreta para las sesiones
 app.secret_key = 'your_secret_key'
 
@@ -186,15 +195,6 @@ def logout():
 
 
 
-
-# Definición del modelo Categoría -------------------------------------------------------------------
-class Categoria(db.Model):
-    __tablename__ = 'categorias'  # Nombre de la tabla en la base de datos
-    id = db.Column(db.Integer, primary_key=True)
-    nombre_categoria = db.Column(db.String(100), nullable=False)
-    descripcion_categoria = db.Column(db.Text, nullable=False)
-    estado_categoria = db.Column(db.String(10), nullable=False)  # 'activo' o 'inactivo'
-
 # Ruta para ver categorías
 @app.route('/admin/ver_categorias')
 def ver_categorias():
@@ -202,6 +202,45 @@ def ver_categorias():
         return redirect(url_for('login'))
     categorias = Categoria.query.all()
     return render_template('admin/ver_categorias.html', categorias=categorias)
+
+
+# EDITAR CATEGORÍA SELECCIONADA EN VER CATEGORÍAS
+@app.route('/admin/editar_categoria/<int:id>', methods=['GET', 'POST'])
+def editar_categoria(id):
+    if 'loggedin' not in session or session['role'] != 'administrador':
+        return redirect(url_for('login'))
+
+    # Obtener la categoría por ID
+    categoria = Categoria.query.get_or_404(id)
+
+    if request.method == 'POST':
+        # Actualizar los datos de la categoría desde el formulario
+        categoria.nombre_categoria = request.form['nombre_categoria']
+        categoria.descripcion_categoria = request.form['descripcion_categoria']
+
+        # Guardar los cambios
+        db.session.commit()
+        flash('Categoría actualizada exitosamente')
+        return redirect(url_for('ver_categorias'))
+
+    # Renderizar el formulario de edición con los datos de la categoría
+    return render_template('admin/editar_categoria.html', categoria=categoria)
+
+
+# ELIMINAR CATEGORÍA DE MODULO VER CATEGORÍAS
+@app.route('/admin/eliminar_categoria/<int:id>', methods=['GET'])
+def eliminar_categoria(id):
+    if 'loggedin' not in session or session['role'] != 'administrador':
+        return redirect(url_for('login'))
+
+    # Obtener la categoría por ID y eliminarla
+    categoria = Categoria.query.get_or_404(id)
+    db.session.delete(categoria)
+    db.session.commit()
+    
+    flash('Categoría eliminada exitosamente')
+    return redirect(url_for('ver_categorias'))
+
 
 # Ruta para crear categorías
 @app.route('/admin/crear_categoria', methods=['GET', 'POST'])
@@ -212,17 +251,19 @@ def crear_categoria():
     if request.method == 'POST':
         nombre_categoria = request.form['nombre_categoria']
         descripcion_categoria = request.form['descripcion_categoria']
-        estado_categoria = request.form['estado_categoria']
+
         nueva_categoria = Categoria(
             nombre_categoria=nombre_categoria,
-            descripcion_categoria=descripcion_categoria,
-            estado_categoria=estado_categoria
+            descripcion_categoria=descripcion_categoria
         )
+        
         db.session.add(nueva_categoria)
         db.session.commit()
+        flash('Categoría creada exitosamente')
         return redirect(url_for('ver_categorias'))
 
     return render_template('admin/crear_categoria.html')
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
